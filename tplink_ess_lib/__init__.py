@@ -40,6 +40,7 @@ class TpLinkESS:
             "RxBadPkt",
         ),
         "vlan": ("VLAN ID", "Member Ports", "Tagged Ports", "VLAN Name"),
+        "poe": ("Port", "Ping IP Address", "Startup Delay", "Interval", "Failure Threshold", "Break Time", "Failures", "Reboots", "Total Pings", "Status"),
     }
 
     working_ids_tp = {

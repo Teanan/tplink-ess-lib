@@ -96,6 +96,9 @@ class Protocol:
         8707: ("str", "vlan_filler", 0),
         12288: ("bool", "qos1", 0),
         12289: ("hex", "qos2", 0),
+        14080: ('hex', 'poe_autorecovery', 0),
+        14336: ('poe', 'poe_autorecovery_config', 0),
+        14592: ('hex', 'poe_extend_mode', 0),
         16640: ("hex", "mirror", 0),
         16384: ("stat", "stats", 0),
         17152: ("bool", "loop_prev", 0),
@@ -176,7 +179,7 @@ class Protocol:
         if kind == "str":
             value = value.split(b"\x00", 1)[0].decode("ascii")
         elif kind == "ip":
-            value = f"{ip_address(value):s}"
+            value = f"{ip_address(value)}"
         elif kind == "hex":
             value = mac_to_str(value)
         elif kind == "action":
@@ -193,6 +196,10 @@ class Protocol:
             value = struct.unpack("!bh", value) if value else None
         elif kind == "stat":
             value = struct.unpack("!bbbIIII", value)
+        elif kind == "poe":
+            value = list(struct.unpack("!bIhhhhhhhb", value)) # port, ip, startup, interval, threshold, break, failures, reboots, pings, status
+            value[1] = f"{ip_address(value[1])}"
+            value = tuple(value)
         elif kind == "bool":
             if len(value) == 0:
                 pass
